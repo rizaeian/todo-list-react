@@ -1,20 +1,22 @@
 import React, { useState } from "react";
+import ToDoItem from "./ToDoItem";
+import InputArea from "./InputArea";
 
 function App() {
-  const [inputList, setInputList] = useState("");
-  const [listItems, addListItem] = useState([]);
+  const [items, setItems] = useState([]);
 
-  function hundleChange(event) {
-    const newList = event.target.value;
-    setInputList(newList);
+  function addItem(inputText) {
+    setItems((prevItems) => {
+      return [...prevItems, inputText];
+    });
   }
 
-  function hundleClick() {
-    addListItem((prevItems) => {
-      return [...prevItems, inputList];
+  function deleteItem(id) {
+    setItems((prevItems) => {
+      return prevItems.filter((item, index) => {
+        return index !== id;
+      });
     });
-
-    setInputList("");
   }
 
   return (
@@ -22,16 +24,16 @@ function App() {
       <div className="heading">
         <h1>To-Do List</h1>
       </div>
-      <div className="form">
-        <input onChange={hundleChange} type="text" value={inputList} />
-        <button onClick={hundleClick}>
-          <span>Add</span>
-        </button>
-      </div>
+      <InputArea onAdd={addItem} />
       <div>
         <ul>
-          {listItems.map((toDoList) => (
-            <li>{toDoList}</li>
+          {items.map((todoItem, index) => (
+            <ToDoItem
+              key={index}
+              id={index}
+              text={todoItem}
+              onChecked={deleteItem}
+            />
           ))}
         </ul>
       </div>
